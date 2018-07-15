@@ -33,3 +33,6 @@ Desktop.ini
 
 # Virtualenv
 env
+
+#Pycharm
+.idea

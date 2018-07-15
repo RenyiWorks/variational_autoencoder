@@ -4,10 +4,12 @@ import configparser
 import logging
 import datetime
 import time
+import re
 
+import constants
 from data_generator import DataGenerator
 
-DEFAULT_CONFIG_PATH = 'config/default.ini'
+DEFAULT_CONFIG_PATH = os.path.join(constants.config_path,'default.ini')
 
 def main(ini_file_path):
 
@@ -54,7 +56,11 @@ def set_up_config(ini_file):
     # Overriding old variables with the new ones
     for header_name, header_dict in new_config.items():
         for variable_name, value in header_dict.items():
-            default_config.set(header_name, variable_name, value)
+            try:
+                default_config.set(header_name, variable_name, value)
+            except ValueError:
+                value = value.replace('%','%%') #to handle dateformat literals
+                default_config.set(header_name, variable_name, value)
 
     return default_config  
 

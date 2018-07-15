@@ -17,7 +17,7 @@ class ImageGenerator(abc.ABC):
         '''
             Generates N images in the format requested in the ini file
         '''
-        raise NotImplmentedError
+        raise NotImplementedError
 
 
 
