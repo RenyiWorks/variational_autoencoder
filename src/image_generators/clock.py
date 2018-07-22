@@ -7,7 +7,6 @@ from PIL import ImageDraw, Image
 class Clock(ImageGenerator):
     def __init__(self, config):
         super().__init__(config)
-        self.n_layers   = int(config['CLOCK']['n_hands'])
         self.hand_color = int(config['CLOCK']['hand_color'])
         self.hand_width = int(config['CLOCK']['hand_width']) * self.antialias_factor
         self.img_size = self.target_size * self.antialias_factor
@@ -42,9 +41,9 @@ class Clock(ImageGenerator):
         img_layers = []
         for layer_i in range(self.n_layers):
             img_layers.append(self.__create_2d_image())
-        img_layers = np.array(img_layers)
+        img_layers = np.dstack(img_layers)
 
-        assert img_layers.shape == (self.n_layers, self.target_size, self.target_size), img_layers.shape
+        assert img_layers.shape == (self.target_size, self.target_size, self.n_layers), img_layers.shape
         return img_layers
 
 

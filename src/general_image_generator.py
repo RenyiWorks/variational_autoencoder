@@ -8,6 +8,7 @@ class ImageGenerator(abc.ABC):
     '''
     def __init__(self, config):
         self.target_size = int(config['DATA']['target_size'])
+        self.n_layers   = int(config['DATA']['n_layers'])
         self.antialias_factor = int(config['DATA']['antialias_factor'])
         self.logger = logging.getLogger('main')
         

@@ -6,6 +6,7 @@ import datetime
 import time
 
 from data_generator import DataGenerator
+from network_controller import NetworkController
 
 DEFAULT_CONFIG_PATH = 'config/default.ini'
 
@@ -23,14 +24,16 @@ def main(ini_file_path):
 
     # DATA
     data_generator = DataGenerator(config)
-    print(data_generator.data['dev'].shape)
+    #print(data_generator.data['dev'][0][:,:,0])
+    #print(data_generator.data['dev'][0][:,:,1])
 
     # NETWORK & TRAIN
-    # network_controller = NetworkController(config)
-    # network_controller.train_and_log(data_generator)
+    network_controller = NetworkController(config)
+    network_controller.train(data_generator)
 
     # TEST & STATISTICS
     # network_controller.test_and_log(data_generator)
+    network_controller.sess.close()
   
 
 # ----------------------------------------------------------------
