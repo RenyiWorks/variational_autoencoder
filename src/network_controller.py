@@ -53,13 +53,17 @@ class NetworkController():
                 counter += 1
                 print(batch)
                 merge = tf.summary.merge_all()
-                summary = self.sess.run([merge, self.optimizer], feed_dict = {self.X: batch, self.Y: batch})
-                train_writer.add_summary(summary, counter)
+                if merge is None:
+                    summary = self.sess.run([self.optimizer], feed_dict={self.X: batch, self.Y: batch})
+                    train_writer.add_summary([None,summary], counter)
+                else:
+                    summary = self.sess.run([merge, self.optimizer], feed_dict = {self.X: batch, self.Y: batch})
+                    train_writer.add_summary(summary, counter)
 
                 
             if not i % self.log_step:
                 loss, prediction, reconstruction_loss, latent_loss, mean, sd = self.sess.run(
-                    [op for _, op in self.operations.items()],
+                    self.operations.values(),
                     feed_dict = {self.X: batches[0], self.Y: batches[0]}
                 )
                 # plt.imshow(np.reshape(batches[0][0], [n,n,l]))
