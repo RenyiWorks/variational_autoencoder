@@ -39,6 +39,7 @@ class NetworkController():
         counter = 0
 
         # for tensorboard
+        tf.summary.scalar('loss', self.operations['loss'])
         train_writer = tf.summary.FileWriter(self.tensorboard_log, self.sess.graph)
 
         for i in range(self.n_epochs):
@@ -51,19 +52,15 @@ class NetworkController():
 
             for batch in batches:
                 counter += 1
-                print(batch)
+                # print(batch)
                 merge = tf.summary.merge_all()
-                if merge is None:
-                    summary = self.sess.run([self.optimizer], feed_dict={self.X: batch, self.Y: batch})
-                    train_writer.add_summary([None,summary], counter)
-                else:
-                    summary = self.sess.run([merge, self.optimizer], feed_dict = {self.X: batch, self.Y: batch})
-                    train_writer.add_summary(summary, counter)
+                summary, _ = self.sess.run([merge, self.optimizer], feed_dict = {self.X: batch, self.Y: batch})
+                train_writer.add_summary(summary, counter)
 
                 
             if not i % self.log_step:
                 loss, prediction, reconstruction_loss, latent_loss, mean, sd = self.sess.run(
-                    self.operations.values(),
+                    list(self.operations.values()),
                     feed_dict = {self.X: batches[0], self.Y: batches[0]}
                 )
                 # plt.imshow(np.reshape(batches[0][0], [n,n,l]))
